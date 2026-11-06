@@ -1,0 +1,23 @@
+// Installed by wifi-power-controller (install.sh --with-polkit).
+// Lets members of the "@GROUP@" group run exactly:
+//   @IW@ dev <interface> set power_save on|off
+// without a password prompt. Anything else still asks for authentication.
+// If action.lookup("command_line") is unavailable the rule simply does not
+// match and polkit falls back to its default (password prompt).
+polkit.addRule(function(action, subject) {
+    if (action.id !== "org.freedesktop.policykit.exec") {
+        return polkit.Result.NOT_HANDLED;
+    }
+    if (!subject.local || !subject.active || !subject.isInGroup("@GROUP@")) {
+        return polkit.Result.NOT_HANDLED;
+    }
+    if (action.lookup("program") !== "@IW@") {
+        return polkit.Result.NOT_HANDLED;
+    }
+    var cmd = action.lookup("command_line");
+    if (typeof cmd === "string" &&
+        /^\S+ dev [A-Za-z0-9_.-]+ set power_save (on|off)$/.test(cmd)) {
+        return polkit.Result.YES;
+    }
+    return polkit.Result.NOT_HANDLED;
+});

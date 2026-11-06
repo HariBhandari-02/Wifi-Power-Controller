@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Wi-Fi Power Controller
+Comment=Control Wi-Fi power saving
+Exec=python3 @HOME@/.local/bin/wifi-power-toggle.py
+Icon=wifi-power-controller
+Terminal=false
+Type=Application
+Categories=Network;
+Keywords=wifi;power;saving;gaming;latency;
